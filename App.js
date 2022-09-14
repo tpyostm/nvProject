@@ -1,48 +1,43 @@
-import { StyleSheet, Text, View,Button } from 'react-native'
-import React from 'react'
+import { View, Text,ActivityIndicator,FlatList } from 'react-native'
+import React ,{useEffect,useState} from 'react'
 
-import {NavigationContainer} from '@react-navigation/native'
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-
-function HomeScreen({navigation}){
-return(
-  <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-    <Text>Home!</Text>
-    <Button
-      title="Go to setting"
-      onPress={()=>navigation.navigate('Setting')}/>
-        </View>
-  )
-}
-
-function SettingScreen({navigation}){
-  return(
-    <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-      <Text>Setting!</Text>
-      <Button
-      title="Go to Home"
-      onPress={()=>navigation.navigate('Home')}/>
-    </View>
-    )
-  }
-const Tab = createBottomTabNavigator();
-
-function Mytabs(){
-  return(
-    <Tab.Navigator>
-      <Tab.Screen name='Home' component={HomeScreen}/>
-      <Tab.Screen name='Setting' component={SettingScreen}/>
-    </Tab.Navigator>
-  )
-}
 const App = () => {
+
+  const [isLoading,setLoading] = useState(true);
+  const [data,setData] = useState([]);
+
+  const getMovie = async ()=>{
+    try {
+      const response = await fetch ('https://reactnative.dev/movies.json' );
+      const json = await response.json();
+      setData(json.getmovie)
+
+    } catch (error) {
+      alert(error.message);
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  useEffect(()=>{ getMovie();
+  },[])
+   
   return (
-    <NavigationContainer>
-      <Mytabs/>
-    </NavigationContainer>
+    <View style={{flex:1 , padding:20}}>
+      { isLoading ? <ActivityIndicator/> : (
+        <FlatList
+         data={data}
+         keyExtractor ={({ id }, index)=>id}
+         renderItem={({ item })=>(
+          <Text>{item.title},{item.releaseYear}</Text>
+
+         )}
+        
+        />
+      )
+      }
+    </View>
   )
 }
 
 export default App
-
-const styles = StyleSheet.create({})
