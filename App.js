@@ -10,7 +10,7 @@ const App = () => {
     try {
       const response = await fetch ('https://reactnative.dev/movies.json' );
       const json = await response.json();
-      setData(json.getmovie)
+      setData(json.movies)
 
     } catch (error) {
       alert(error.message);
