@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Button, Image } from "react-native";
 import React from "react";
 
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import HomeScreen from "./HomeScreen";
+import HomeScreen from "./screen/HomeScreen";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,

@@ -1,103 +1,54 @@
-import { StyleSheet, Text, View,Button,Image } from 'react-native'
-import React from 'react'
-import { Ionicons } from '@expo/vector-icons'
+import { StyleSheet, Text, View, Button, Image } from "react-native";
+import React from "react";
 
-import {NavigationContainer} from '@react-navigation/native'
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import {HeaderButtons,HeaderButton,Item} from "react-navigation-header-buttons"
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import HomeScreen from "./screen/HomeScreen";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
+import { SafeAreaView } from "react-native-web";
 
-const IoniconsHeaderButton = (props) => (
-  <HeaderButton IconComponent={Ionicons} iconSize={23} {...props} />
-);
+import ProductScreen from "./screen/ProductScreen";
 
-const HomeScreen = ({ navigation }) => {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-          <Item
-            title="register"
-            iconName="person-add"
-            onPress={() => alert("ลงทะเบียน")}
-          />
-        </HeaderButtons>
-      ),
-    });
-  }, [navigation]);
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "rgb(255,15,85)",
+  },
+};
 
+function FeedScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Ionicons name="home" size={30} color="#dc143c" />
-      <Text>Home Screen</Text>
-     
+      <Text>Feed Screen</Text>
+      <Button onPress={() => navigation.openDrawer()} title="Home Screen" />
     </View>
   );
-};
-  
-
-
-function SettingScreen({navigation}){
-  return(
-    <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-      <Text>Setting Screen!</Text>
-      <Button
-      title="Go to Home"
-      onPress={()=>navigation.navigate('Home')}/>
-    </View>
-    )
-  }
-
-  function CustomDrawerContent(props){
-    return(
-      <DrawerContentScrollView {...props}>
-        <DrawerItemList {...props}/>
-        
-      </DrawerContentScrollView>
-    )
-  }
-
-  const Tab = createBottomTabNavigator();
-
-  const Drawer = createDrawerNavigator();
-
-
-
-function Mytabs(){
-  return(
-    <Tab.Navigator
-    screenOptions={({route})=>({
-      tabBarIcon :({focused,color,size})=>{
-        let iconName;
-        if(route.name==='Home'){
-          iconName = focused
-          ?'ios-information-circle'
-          :'ios-information-circle-outline'
-
-        } else if(route.name==='Setting'){
-          iconName = focused? 'ios-list-box' 
- : 'ios-list'
-        }
-        return <Ionicons name={iconName} size={size} color={color}/>;
-      },
-      tabBarActiveTintColor:'tomato',
-      tabBarInactiveTintColor:'Gray'
-
-    })}
-
-    >
-      <Tab.Screen name='Home' component={HomeScreen}/>
-      <Tab.Screen name='Setting' component={SettingScreen}/>
-    </Tab.Navigator>
-  )
 }
 
 
+function CustomDrawerContent(props) {
+  return (
+    <SafeAreaView>
+      <Image
+        style={styles.sideMenuProfileIcon}
+        source={require("./assets/react_logo.png")}
+      />
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+       <DrawerItem
+          label="Close Drawer"
+          onPress={() => props.navigation.closeDrawer()}
+        />
+      </DrawerContentScrollView>
+    </SafeAreaView>
+  );
+}
+const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
   return (
@@ -105,21 +56,36 @@ function MyDrawer() {
       useLegacyImplementation
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <Drawer.Screen name="Home" component={Mytabs} />
-      <Drawer.Screen name="Setting" component={SettingScreen} />
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Product" component={ProductScreen} />
     </Drawer.Navigator>
   );
 }
-
 const App = () => {
   return (
-    <NavigationContainer>
-      <MyDrawer/>
-    </NavigationContainer>    
-  )
-}
+    <NavigationContainer theme={MyTheme}>
+      <MyDrawer />
+    </NavigationContainer>
+  );
+};
+
+const styles = StyleSheet.create({
+   container: {
+      height: 80,
+      elevation: 3,
+      borderColor: 'gray',
+      borderRadius: 5,
+      flexDirection: 'row',
+      marginHorizontal: 20,
+  },
+  dataContainer: {
+      flex: 1,
+  },
+  thumbnail: {
+      width: 70,
+      height: 70,
+  },   
+});
 
 
-export default App
-
-const styles = StyleSheet.create({})
+export default App;
